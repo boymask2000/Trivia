@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Trivia"
-
-    >
+    tools:context=".Trivia">
 
 
         <TextView
@@ -14,22 +12,156 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/hello_world"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/wrongval" />
+
+        <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/domanda"></LinearLayout>
+
+        <TextView
+            android:id="@+id/arglabel"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Arg:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/ll"
+        <TextView
+            android:id="@+id/argval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Arg:"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.346"
+            app:layout_constraintStart_toEndOf="@+id/arglabel"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/levellabel"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Difficoulty:"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/domanda"></LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/arglabel" />
+
+        <TextView
+            android:id="@+id/levelval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Arg:"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.346"
+            app:layout_constraintStart_toEndOf="@+id/levellabel"
+            app:layout_constraintTop_toBottomOf="@+id/argval" />
+
+        <TextView
+            android:id="@+id/questionlabel"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Question:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/levellabel" />
+
+        <TextView
+            android:id="@+id/questionval"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Arg:"
+            app:layout_constraintStart_toEndOf="@+id/questionlabel"
+            app:layout_constraintTop_toBottomOf="@+id/levelval" />
+
+        <TextView
+            android:id="@+id/questionof"
+            android:layout_width="33dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="of"
+            app:layout_constraintStart_toEndOf="@+id/questionval"
+            app:layout_constraintTop_toBottomOf="@+id/levelval" />
+
+        <TextView
+            android:id="@+id/questiontotal"
+            android:layout_width="33dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Arg:"
+
+            app:layout_constraintStart_toEndOf="@+id/questionof"
+            app:layout_constraintTop_toBottomOf="@+id/levelval" />
+
+        <TextView
+            android:id="@+id/rightlabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Right Replies:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/questionlabel" />
+
+        <TextView
+            android:id="@+id/rightval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Arg:"
+            app:layout_constraintStart_toEndOf="@+id/rightlabel"
+            app:layout_constraintTop_toBottomOf="@+id/questionval" />
+
+        <TextView
+            android:id="@+id/wronglabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Wrong Replies:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rightlabel" />
+
+        <TextView
+            android:id="@+id/wrongval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Arg:"
+            app:layout_constraintStart_toEndOf="@+id/rightlabel"
+            app:layout_constraintTop_toBottomOf="@+id/rightval" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

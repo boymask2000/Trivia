@@ -41,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private final String interID_TEST = "ca-app-pub-3940256099942544/1033173712";
     private final String interID_PROD = "ca-app-pub-6114671792914206/9958086850";
     private final String interID = interID_TEST;
-    private String query;
-    private String gay;
+
     private String sessionToken;
 
     private  RecyclerView rvContacts;
@@ -220,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
     public void setImg(Bitmap bmp) {
         simpleImageView.setImageBitmap(bmp);
     }
-
+private int level=0;
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -228,15 +227,15 @@ public class MainActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.facile:
                 if (checked)
-                    // Pirates are the best
+                    level=0;
                     break;
             case R.id.medio:
                 if (checked)
-                    // Ninjas rule
+                    level=1;
                     break;
             case R.id.difficile:
                 if (checked)
-                    // Ninjas rule
+                    level=2;
                     break;
         }
 
@@ -247,6 +246,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         intent.putExtra("CAT", cat);
+        intent.putExtra("token", sessionToken);
+        intent.putExtra("level", level);
         startActivity(intent);
 
     }

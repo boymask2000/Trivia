@@ -18,9 +18,10 @@ public interface GetDataService {
     @GET("/api_category.php")
     Call<CategoryList> getArguments();
 
+    //difficulty=easy
     // https://opentdb.com/api.php?amount=10&category=23
-    @GET("/api.php")
-    Call<Questions> getQuestions(@Query("amount") String amount, @Query("category") int category);
+    @GET("/api.php?encode=base64")
+    Call<Questions> getQuestions(@Query("amount") String amount, @Query("category") int category, @Query("difficulty") String difficulty ,@Query("token") String token);
 
 /*    @GET("/country/italy/status/confirmed/live?from=2020-03-01T00:00:00Z")
     Call<List<CovidData>> getConfirmed(@Query("to") String maxData);

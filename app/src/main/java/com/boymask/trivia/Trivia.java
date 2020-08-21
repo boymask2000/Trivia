@@ -20,6 +20,9 @@ import com.boymask.trivia.network.GetDataService;
 import com.boymask.trivia.network.Questions;
 import com.boymask.trivia.network.RetrofitClientInstance;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -31,6 +34,14 @@ import retrofit2.Response;
 public class Trivia extends AppCompatActivity {
 
     private TextView mTextdomanda;
+    private TextView mTextargval;
+    private TextView mTextLevel;
+    private TextView mTextCurrQuestion;
+    private TextView mTextTotalQuestion;
+
+    private TextView mTextRightReplies;
+    private TextView mTextWrongReplies;
+
     private Category category;
     private GetDataService service;
     private ViewGroup layout;
@@ -43,12 +54,16 @@ public class Trivia extends AppCompatActivity {
     private Button submit;
     private boolean right = false;
     private String correct;
+    private String token;
+    private int level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         category = (Category) intent.getSerializableExtra("CAT");
+        token = intent.getStringExtra("token");
+        level = intent.getIntExtra("level", 0);
 
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         init();
@@ -64,17 +79,30 @@ public class Trivia extends AppCompatActivity {
         setContentView(view);
 
         mTextdomanda = (TextView) findViewById(R.id.domanda);
+        mTextargval = (TextView) findViewById(R.id.argval);
+        mTextLevel = (TextView) findViewById(R.id.levelval);
+        mTextCurrQuestion = (TextView) findViewById(R.id.questionval);
+        mTextTotalQuestion = (TextView) findViewById(R.id.questiontotal);
+
+        mTextRightReplies= (TextView) findViewById(R.id.rightval);
+        mTextWrongReplies= (TextView) findViewById(R.id.wrongval);
+        mTextRightReplies.setText(""+numRight);
+        mTextWrongReplies.setText(""+numWrong);
+
+        mTextargval.setText(category.getName());
+        mTextLevel.setText(getDifficoult());
     }
 
     private void getQuestions() {
 
-        Call<Questions> call = service.getQuestions("10", category.getId());
+        Call<Questions> call = service.getQuestions("10", category.getId(), getDifficoult(), token);
 
         call.enqueue(new Callback<Questions>() {
             @Override
             public void onResponse(Call<Questions> call, Response<Questions> response) {
                 questions = response.body();
-                showQuestions();
+                if (checkResult())
+                    showQuestions();
             }
 
             @Override
@@ -86,21 +114,51 @@ public class Trivia extends AppCompatActivity {
 
     }
 
+    private boolean checkResult() {
+        int rc = questions.getResponseCode();
+
+        return true;
+    }
+
+    private String getDifficoult() {
+        switch (level) {
+            case 0:
+                return "easy";
+            case 1:
+                return "medium";
+            default:
+                return "hard";
+        }
+    }
 
 
     private void showQuestions() {
         List<Map> qs = questions.getQuestions();
 
+        mTextCurrQuestion.setText("" + (current_question + 1));
+        mTextTotalQuestion.setText("" + qs.size());
         Map m = qs.get(current_question);
-        mTextdomanda.setText((CharSequence) m.get("question"));
+
+        String questionText = (String) m.get("question");
+        String result = null;
+        try {
+            //  result = java.net.URLDecoder.decode(questionText, StandardCharsets.UTF_8.name());
+            result = getString(questionText);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        mTextdomanda.setText(result);
         List<String> wrongs = (List<String>) m.get("incorrect_answers");
+
         final RadioButton[] rb = new RadioButton[wrongs.size() + 1];
         Random rand = new Random();
 
         // Generate random integers in range 0 to 999
         int randN = rand.nextInt(wrongs.size());
 
-         correct = (String) m.get("correct_answer");
+        correct = (String) m.get("correct_answer");
         createButtonSubmit(questions, wrongs, rb, randN);
 
 
@@ -112,22 +170,28 @@ public class Trivia extends AppCompatActivity {
         for (int i = 0; i < wrongs.size(); i++) {
             if (i == randN) {
                 rb[i] = new RadioButton(this);
-                rb[i].setText(correct);
+                rb[i].setText(getString(correct));
                 rg.addView(rb[i]);
                 delta = 1;
             }
             rb[i + delta] = new RadioButton(this);
             rg.addView(rb[i + delta]); //the RadioButtons are added to the radioGroup instead of the layout
-            rb[i + delta].setText(wrongs.get(i));
+            rb[i + delta].setText(getString(wrongs.get(i)));
         }
         layout.addView(rg);
         layout.addView(submit);
     }
 
+    private String getString(String questionText) {
+        byte[] res = Base64.getDecoder().decode(questionText);
+        return new String(res);
+
+    }
+
     private void createButtonResult() {
         Button result = new Button(this);
 
-        result.setText(right ? "Correct" : "Not correct. Correct answer was : "+correct);
+        result.setText(right ? "Correct" : "Not correct. Correct answer was : " + getString(correct));
         result.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 layout.removeView(result);
@@ -164,6 +228,8 @@ public class Trivia extends AppCompatActivity {
                         }
                     }
                 }
+                mTextRightReplies.setText(""+numRight);
+                mTextWrongReplies.setText(""+numWrong);
                 System.out.println("points_ " + points);
 
                 layout.removeView(submit);
