@@ -34,6 +34,15 @@ public class Trivia extends AppCompatActivity {
     private Category category;
     private GetDataService service;
     private ViewGroup layout;
+    private Questions questions;
+    private int current_question = 0;
+    private int points = 0;
+    private int numRight = 0;
+    private int numWrong = 0;
+    private RadioGroup rg;
+    private Button submit;
+    private boolean right = false;
+    private String correct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +73,8 @@ public class Trivia extends AppCompatActivity {
         call.enqueue(new Callback<Questions>() {
             @Override
             public void onResponse(Call<Questions> call, Response<Questions> response) {
-                Questions questions = response.body();
-                showQuestions(questions);
+                questions = response.body();
+                showQuestions();
             }
 
             @Override
@@ -77,13 +86,10 @@ public class Trivia extends AppCompatActivity {
 
     }
 
-    private int current_question = 0;
-    private int points = 0;
-    private RadioGroup rg;
-    private Button submit;
 
-    private void showQuestions(Questions questions) {
-        List<Map> qs = questions.getResults();
+
+    private void showQuestions() {
+        List<Map> qs = questions.getQuestions();
 
         Map m = qs.get(current_question);
         mTextdomanda.setText((CharSequence) m.get("question"));
@@ -94,27 +100,8 @@ public class Trivia extends AppCompatActivity {
         // Generate random integers in range 0 to 999
         int randN = rand.nextInt(wrongs.size());
 
-        String correct = (String) m.get("correct_answer");
-        submit = new Button(this);
-
-        submit.setText("Ok");
-        submit.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.out.println("llllll");
-                for (int i = 0; i <= wrongs.size(); i++) {
-                    if (rb[i].isChecked()) {
-                        if (i == randN) points++;
-                        else points--;
-                    }
-
-                }
-                System.out.println("points_ " + points);
-                layout.removeView(rg);
-                layout.removeView(submit);
-                current_question++;
-                showQuestions(questions);
-            }
-        });
+         correct = (String) m.get("correct_answer");
+        createButtonSubmit(questions, wrongs, rb, randN);
 
 
         rg = new RadioGroup(this); //create the RadioGroup
@@ -135,5 +122,55 @@ public class Trivia extends AppCompatActivity {
         }
         layout.addView(rg);
         layout.addView(submit);
+    }
+
+    private void createButtonResult() {
+        Button result = new Button(this);
+
+        result.setText(right ? "Correct" : "Not correct. Correct answer was : "+correct);
+        result.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                layout.removeView(result);
+                layout.removeView(rg);
+
+                if (current_question < questions.getQuestions().size() + 1)
+                    showQuestions();
+                else finish();
+
+
+            }
+        });
+        layout.addView(result);
+    }
+
+    private void createButtonSubmit(Questions questions, List<String> wrongs, RadioButton[] rb, int randN) {
+        submit = new Button(this);
+        right = false;
+        submit.setText("Ok");
+        submit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("llllll");
+                for (int i = 0; i <= wrongs.size(); i++) {
+                    if (rb[i].isChecked()) {
+                        if (i == randN) {
+                            points++;
+                            numRight++;
+                            right = true;
+                            createButtonResult();
+                        } else {
+                            points--;
+                            numWrong++;
+                            createButtonResult();
+                        }
+                    }
+                }
+                System.out.println("points_ " + points);
+
+                layout.removeView(submit);
+                current_question++;
+
+
+            }
+        });
     }
 }

@@ -9,7 +9,8 @@ public class Questions {
     @SerializedName("results")
     private List<Map> results;
 
-    public List<Map> getResults() {
+    public List<Map> getQuestions() {
         return results;
     }
 }
+
