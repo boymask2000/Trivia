@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -213,9 +214,9 @@ public class Trivia extends AppCompatActivity {
         submit.setText("Ok");
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("llllll");
+                boolean checked=false;
                 for (int i = 0; i <= wrongs.size(); i++) {
-                    if (rb[i].isChecked()) {
+                    if (rb[i].isChecked()) {checked=true;
                         if (i == randN) {
                             points++;
                             numRight++;
@@ -228,13 +229,16 @@ public class Trivia extends AppCompatActivity {
                         }
                     }
                 }
-                mTextRightReplies.setText(""+numRight);
-                mTextWrongReplies.setText(""+numWrong);
-                System.out.println("points_ " + points);
+                if(!checked){
+                    //Toast.makeText(Trivia.this, "Select one", Toast.LENGTH_LONG).show();
+                }else {
+                    mTextRightReplies.setText("" + numRight);
+                    mTextWrongReplies.setText("" + numWrong);
+                    System.out.println("points_ " + points);
 
-                layout.removeView(submit);
-                current_question++;
-
+                    layout.removeView(submit);
+                    current_question++;
+                }
 
             }
         });

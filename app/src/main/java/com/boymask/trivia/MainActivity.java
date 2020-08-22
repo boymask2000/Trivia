@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -41,25 +42,30 @@ public class MainActivity extends AppCompatActivity {
     private final String interID_TEST = "ca-app-pub-3940256099942544/1033173712";
     private final String interID_PROD = "ca-app-pub-6114671792914206/9958086850";
     private final String interID = interID_TEST;
-
+    private int level = 0;
     private String sessionToken;
 
-    private  RecyclerView rvContacts;
+    private RecyclerView rvContacts;
     private ArgsListAdapter adapter;
+    private Category triviaCat;
+    private Button start;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        start=findViewById(R.id.start);
+
         // Create adapter passing in the sample user data
-         adapter = new ArgsListAdapter(this);
+        adapter = new ArgsListAdapter(this);
         // Attach the adapter to the recyclerview to populate items
-         rvContacts = (RecyclerView) findViewById(R.id.list_view);
+        rvContacts = findViewById(R.id.list_view0);
         rvContacts.setAdapter(adapter);
         // Set layout manager to position the items
         rvContacts.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-
+        rvContacts.setNestedScrollingEnabled(false);
         getPreferences();
 
         // Menu Inizio ---------------------------------------------------------------------
@@ -98,7 +104,14 @@ public class MainActivity extends AppCompatActivity {
                 getImage(service);
             }
         });*/
+start.setOnClickListener(new View.OnClickListener() {
 
+    @Override
+    public void onClick(View view) {
+        if(triviaCat!=null)
+        startTrivia(triviaCat);
+    }
+});
 
     }
 
@@ -156,8 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 CategoryList args = response.body();
 
 
-
-            //    RecyclerView rvContacts = (RecyclerView) findViewById(R.id.list_view);
+                //    RecyclerView rvContacts = (RecyclerView) findViewById(R.id.list_view);
 
 
                 // Create adapter passing in the sample user data
@@ -166,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
                 rvContacts.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 // Set layout manager to position the items
-              //  rvContacts.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-              //  adapter.notifyDataSetChanged();
+                //  rvContacts.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                //  adapter.notifyDataSetChanged();
 
                 rvContacts.setHasFixedSize(true);
 
@@ -219,24 +231,26 @@ public class MainActivity extends AppCompatActivity {
     public void setImg(Bitmap bmp) {
         simpleImageView.setImageBitmap(bmp);
     }
-private int level=0;
+
+
+
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
         // Check which radio button was clicked
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.facile:
                 if (checked)
-                    level=0;
-                    break;
+                    level = 0;
+                break;
             case R.id.medio:
                 if (checked)
-                    level=1;
-                    break;
+                    level = 1;
+                break;
             case R.id.difficile:
                 if (checked)
-                    level=2;
-                    break;
+                    level = 2;
+                break;
         }
 
     }
@@ -251,4 +265,10 @@ private int level=0;
         startActivity(intent);
 
     }
+
+    public void setTriviaCat(Category cat) {
+        this.triviaCat=cat;
+        start.setText("Start "+cat.getName());
+    }
+
 }

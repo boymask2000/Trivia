@@ -95,7 +95,8 @@ public class ArgsListAdapter  extends
                 Category cat = mContacts.get(position);
                 // We can access the data within the views
                 System.out.println( cat.getName());
-                main.startTrivia(cat);
+                main.setTriviaCat(cat);
+
             }
         }
     }
