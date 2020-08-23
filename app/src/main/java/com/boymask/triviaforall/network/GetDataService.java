@@ -1,4 +1,4 @@
-package com.boymask.trivia.network;
+package com.boymask.triviaforall.network;
 
 import java.util.List;
 

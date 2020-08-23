@@ -1,4 +1,4 @@
-package com.boymask.trivia.lists;
+package com.boymask.triviaforall.lists;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.boymask.trivia.MainActivity;
-import com.boymask.trivia.R;
-import com.boymask.trivia.network.Category;
+import com.boymask.triviaforall.MainActivity;
+import com.boymask.triviaforall.R;
+import com.boymask.triviaforall.network.Category;
 
 import java.util.ArrayList;
 import java.util.List;

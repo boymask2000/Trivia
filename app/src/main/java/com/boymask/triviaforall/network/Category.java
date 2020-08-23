@@ -1,9 +1,8 @@
-package com.boymask.trivia.network;
+package com.boymask.triviaforall.network;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Category implements Serializable {
 

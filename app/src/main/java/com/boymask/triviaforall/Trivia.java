@@ -1,36 +1,27 @@
-package com.boymask.trivia;
+package com.boymask.triviaforall;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.boymask.trivia.network.Category;
-import com.boymask.trivia.network.GetDataService;
-import com.boymask.trivia.network.Questions;
-import com.boymask.trivia.network.RetrofitClientInstance;
+import com.boymask.triviaforall.network.Category;
+import com.boymask.triviaforall.network.GetDataService;
+import com.boymask.triviaforall.network.Questions;
+import com.boymask.triviaforall.network.RetrofitClientInstance;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Trivia extends AppCompatActivity {
 
@@ -43,8 +34,6 @@ public class Trivia extends AppCompatActivity {
     private TextView mTextRightReplies;
     private TextView mTextWrongReplies;
 
-    private Category category;
-    private GetDataService service;
     private ViewGroup layout;
     private Questions questions;
     private int current_question = 0;
@@ -55,21 +44,17 @@ public class Trivia extends AppCompatActivity {
     private Button submit;
     private boolean right = false;
     private String correct;
-    private String token;
-    private int level;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        category = (Category) intent.getSerializableExtra("CAT");
-        token = intent.getStringExtra("token");
-        level = intent.getIntExtra("level", 0);
+        questions = (Questions) intent.getSerializableExtra("questions");
 
-        service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         init();
 
-        getQuestions();
+        showQuestions();
     }
 
     private void init() {
@@ -85,51 +70,13 @@ public class Trivia extends AppCompatActivity {
         mTextCurrQuestion = (TextView) findViewById(R.id.questionval);
         mTextTotalQuestion = (TextView) findViewById(R.id.questiontotal);
 
-        mTextRightReplies= (TextView) findViewById(R.id.rightval);
-        mTextWrongReplies= (TextView) findViewById(R.id.wrongval);
-        mTextRightReplies.setText(""+numRight);
-        mTextWrongReplies.setText(""+numWrong);
+        mTextRightReplies = (TextView) findViewById(R.id.rightval);
+        mTextWrongReplies = (TextView) findViewById(R.id.wrongval);
+        mTextRightReplies.setText("" + numRight);
+        mTextWrongReplies.setText("" + numWrong);
 
-        mTextargval.setText(category.getName());
-        mTextLevel.setText(getDifficoult());
-    }
-
-    private void getQuestions() {
-
-        Call<Questions> call = service.getQuestions("10", category.getId(), getDifficoult(), token);
-
-        call.enqueue(new Callback<Questions>() {
-            @Override
-            public void onResponse(Call<Questions> call, Response<Questions> response) {
-                questions = response.body();
-                if (checkResult())
-                    showQuestions();
-            }
-
-            @Override
-            public void onFailure(Call<Questions> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-
-    }
-
-    private boolean checkResult() {
-        int rc = questions.getResponseCode();
-
-        return true;
-    }
-
-    private String getDifficoult() {
-        switch (level) {
-            case 0:
-                return "easy";
-            case 1:
-                return "medium";
-            default:
-                return "hard";
-        }
+        mTextargval.setText(questions.getCategory().getName());
+        mTextLevel.setText(questions.getDiffic());
     }
 
 
@@ -198,11 +145,9 @@ public class Trivia extends AppCompatActivity {
                 layout.removeView(result);
                 layout.removeView(rg);
 
-                if (current_question < questions.getQuestions().size() + 1)
+                if (current_question < questions.getQuestions().size())
                     showQuestions();
                 else finish();
-
-
             }
         });
         layout.addView(result);
@@ -214,9 +159,10 @@ public class Trivia extends AppCompatActivity {
         submit.setText("Ok");
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                boolean checked=false;
+                boolean checked = false;
                 for (int i = 0; i <= wrongs.size(); i++) {
-                    if (rb[i].isChecked()) {checked=true;
+                    if (rb[i].isChecked()) {
+                        checked = true;
                         if (i == randN) {
                             points++;
                             numRight++;
@@ -229,9 +175,9 @@ public class Trivia extends AppCompatActivity {
                         }
                     }
                 }
-                if(!checked){
+                if (!checked) {
                     //Toast.makeText(Trivia.this, "Select one", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     mTextRightReplies.setText("" + numRight);
                     mTextWrongReplies.setText("" + numWrong);
                     System.out.println("points_ " + points);

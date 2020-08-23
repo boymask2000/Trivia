@@ -1,4 +1,4 @@
-package com.boymask.trivia;
+package com.boymask.triviaforall;
 
 import android.content.Context;
 

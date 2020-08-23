@@ -1,4 +1,4 @@
-package com.boymask.trivia.network;
+package com.boymask.triviaforall.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
